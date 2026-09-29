@@ -71,7 +71,7 @@ export function applyVolumes() {
   const t = ctx.currentTime;
   bus.voice.gain.setTargetAtTime(vol('voiceVol'), t, 0.05);
   bus.breath.gain.setTargetAtTime(vol('breathVol'), t, 0.05);
-  bus.music.gain.setTargetAtTime(vol('musicVol') * 0.8, t, 0.05);
+  bus.music.gain.setTargetAtTime(vol('musicVol') * 0.4, t, 0.05);
   bus.fx.gain.setTargetAtTime(0.6, t, 0.05);
 }
 

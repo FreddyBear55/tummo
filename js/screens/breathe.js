@@ -53,7 +53,7 @@ export function guidedSetup(ctx) {
   const c2 = card();
   c2.append(
     toggle('Guidance voice', s.guideBreathing, (v) => setSetting('guideBreathing', v), { hint: 'Energetic while breathing' }),
-    toggle('Retention guidance', s.guideRetention, (v) => setSetting('guideRetention', v), { sub: true, hint: 'Calm while holding' }),
+    toggle('Retention guidance', s.guideRetention, (v) => setSetting('guideRetention', v), { hint: 'Calm while holding' }),
     toggle('Breathing sounds', s.breathSounds, (v) => setSetting('breathSounds', v)),
     toggle('Music while breathing', s.musicBreath, (v) => setSetting('musicBreath', v)),
     toggle('Music while holding', s.musicHold, (v) => setSetting('musicHold', v)),
