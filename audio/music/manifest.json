@@ -1,0 +1,11 @@
+{
+  "breath": [
+    { "file": "yogatune.m4a", "title": "Yoga Tune" },
+    { "file": "pilates.m4a",  "title": "Flow" },
+    { "file": "serene.m4a",   "title": "Serene" }
+  ],
+  "hold": [
+    { "file": "calmambient.m4a", "title": "Calm Ambient" },
+    { "file": "heavenly.m4a",    "title": "Heavenly" }
+  ]
+}

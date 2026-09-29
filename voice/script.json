@@ -1,0 +1,89 @@
+{
+  "cues": [
+    {"id": "begin", "tone": "energetic", "text": "Alright, let's do this. Get comfortable, and follow the rhythm."},
+
+    {"id": "round-1", "tone": "energetic", "text": "Round one. Here we go."},
+    {"id": "round-2", "tone": "energetic", "text": "Round two. Stay with it."},
+    {"id": "round-3", "tone": "energetic", "text": "Round three. You're getting stronger."},
+    {"id": "round-4", "tone": "energetic", "text": "Round four. Keep it flowing."},
+    {"id": "round-5", "tone": "energetic", "text": "Round five. Almost there."},
+    {"id": "round-6", "tone": "energetic", "text": "Round six. Let's finish strong."},
+    {"id": "round-7", "tone": "energetic", "text": "Round seven. Keep going."},
+    {"id": "round-8", "tone": "energetic", "text": "Round eight. One breath at a time."},
+
+    {"id": "b-power", "tone": "energetic", "text": "Deep breath in, all the way, and let it go."},
+    {"id": "b-full", "tone": "energetic", "text": "Fill up the belly, then the chest, then let it fall."},
+    {"id": "b-strong", "tone": "energetic", "text": "That's it. Strong breaths. Keep the rhythm."},
+    {"id": "b-alive", "tone": "energetic", "text": "Feel the energy building. You're doing great."},
+    {"id": "b-tingle", "tone": "energetic", "text": "If you feel tingling, that's normal. Keep going."},
+    {"id": "b-flow", "tone": "energetic", "text": "Breathe with power. Let it flow."},
+    {"id": "b-ten", "tone": "energetic", "text": "Ten more breaths."},
+    {"id": "b-five", "tone": "energetic", "text": "Five more."},
+    {"id": "b-last", "tone": "energetic", "text": "Last breath. In, all the way."},
+
+    {"id": "h-start", "tone": "calm", "text": "Now let it all out, and hold. Relax."},
+    {"id": "h-relax", "tone": "calm", "text": "Stay relaxed. Let the body be still."},
+    {"id": "h-soft", "tone": "calm", "text": "Soft face. Soft shoulders. There is nothing to do."},
+    {"id": "h-urge", "tone": "calm", "text": "When you feel a strong urge to breathe, take your time. Then tap twice to come back."},
+    {"id": "h-min-1", "tone": "calm", "text": "One minute."},
+    {"id": "h-min-2", "tone": "calm", "text": "Two minutes."},
+    {"id": "h-min-3", "tone": "calm", "text": "Three minutes."},
+    {"id": "h-min-4", "tone": "calm", "text": "Four minutes."},
+    {"id": "h-min-5", "tone": "calm", "text": "Five minutes."},
+    {"id": "h-target", "tone": "calm", "text": "You've reached your target. Stay as long as it feels good."},
+
+    {"id": "r-in", "tone": "calm", "text": "Now take one deep breath in. Fill up completely, and hold."},
+    {"id": "r-out", "tone": "calm", "text": "And let it go."},
+
+    {"id": "finish", "tone": "calm", "text": "Beautiful work. Take a moment, and notice how you feel."},
+
+    {"id": "c-prep", "tone": "calm", "text": "Get ready. Long, slow exhales. When the count reaches zero, step in slowly."},
+    {"id": "c-in", "tone": "energetic", "text": "In you go. Slow the breath down. The cold is the teacher."},
+    {"id": "c-steady", "tone": "calm", "text": "Long, steady breaths. Nice and slow."},
+    {"id": "c-calm", "tone": "calm", "text": "The cold will pass. Stay with your breath."},
+    {"id": "c-30", "tone": "calm", "text": "Thirty seconds. You're doing well."},
+    {"id": "c-60", "tone": "calm", "text": "One minute."},
+    {"id": "c-90", "tone": "calm", "text": "A minute and a half."},
+    {"id": "c-120", "tone": "calm", "text": "Two minutes."},
+    {"id": "c-150", "tone": "calm", "text": "Two and a half minutes."},
+    {"id": "c-180", "tone": "calm", "text": "Three minutes."},
+    {"id": "c-target", "tone": "energetic", "text": "Target reached. Strong work. Get out whenever you're ready."},
+    {"id": "c-out", "tone": "calm", "text": "Out you come. Let the body warm itself. Move, and don't rush to a hot shower."}
+  ],
+  "mind": [
+    {
+      "id": "intention", "title": "Set an Intention", "minutes": 2,
+      "blurb": "Settle in and choose one word for the day.",
+      "steps": [
+        {"t": 0,   "id": "m-int-1", "text": "Close your eyes. Let your breathing settle."},
+        {"t": 15,  "id": "m-int-2", "text": "Ask yourself: what do I want from today?"},
+        {"t": 45,  "id": "m-int-3", "text": "Choose one word. Just one."},
+        {"t": 75,  "id": "m-int-4", "text": "Feel that word in your chest. Let it be simple and strong."},
+        {"t": 105, "id": "m-int-5", "text": "One deep breath in, and out. Carry your word with you."}
+      ]
+    },
+    {
+      "id": "cold-visual", "title": "Visualize the Cold", "minutes": 3,
+      "blurb": "Rehearse staying calm before you step in.",
+      "steps": [
+        {"t": 0,   "id": "m-cold-1", "text": "Settle in. Slow, easy breaths."},
+        {"t": 20,  "id": "m-cold-2", "text": "Picture the cold water in front of you. Notice that you feel calm."},
+        {"t": 55,  "id": "m-cold-3", "text": "See yourself stepping in slowly. Your breathing stays long and steady."},
+        {"t": 100, "id": "m-cold-4", "text": "The cold rises around you. Your shoulders stay soft. Your exhale stays slow."},
+        {"t": 145, "id": "m-cold-5", "text": "You are relaxed, and in control. The cold is just a sensation."},
+        {"t": 170, "id": "m-cold-6", "text": "Take a deep breath, and come back to the room."}
+      ]
+    },
+    {
+      "id": "gratitude", "title": "Gratitude Reset", "minutes": 3,
+      "blurb": "End on a calm, grateful note.",
+      "steps": [
+        {"t": 0,   "id": "m-grat-1", "text": "Get comfortable. Let your breath slow down."},
+        {"t": 20,  "id": "m-grat-2", "text": "Think of one person you're grateful for."},
+        {"t": 70,  "id": "m-grat-3", "text": "Now think of one thing about your body that works well."},
+        {"t": 120, "id": "m-grat-4", "text": "Now something small from today that made you smile."},
+        {"t": 165, "id": "m-grat-5", "text": "Take a deep breath in, and let it out slowly. Well done."}
+      ]
+    }
+  ]
+}

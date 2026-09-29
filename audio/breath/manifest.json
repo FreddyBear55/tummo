@@ -1,0 +1,16 @@
+{
+ "in": [
+  "in1.m4a",
+  "in2.m4a",
+  "in3.m4a",
+  "in4.m4a",
+  "in5.m4a"
+ ],
+ "out": [
+  "out1.m4a",
+  "out2.m4a",
+  "out3.m4a",
+  "out4.m4a",
+  "out5.m4a"
+ ]
+}
