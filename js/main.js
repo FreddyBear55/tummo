@@ -1,5 +1,6 @@
 import * as A from './audio.js';
 import { flags } from './store.js';
+import { applyTheme } from './theme.js';
 import { el, icons, svg, hexPoints } from './ui.js';
 import { home } from './screens/home.js';
 import { breathMenu, guidedSetup, guidedSession, guidedSummary } from './screens/breathe.js';
@@ -63,8 +64,8 @@ function tabbar(active) {
   centre.type = 'button';
   centre.setAttribute('aria-label', 'Home');
   centre.append(svg('svg', { viewBox: '0 0 64 64' }, [
-    svg('polygon', { points: hexPoints(32, 32, 26), fill: '#fff', stroke: '#fff', 'stroke-width': 8, 'stroke-linejoin': 'round' }),
-    svg('polygon', { points: hexPoints(22, 36, 7), fill: '#0f3b4a' }),
+    svg('polygon', { points: hexPoints(32, 32, 26), style: 'fill:var(--paper);stroke:var(--paper)', 'stroke-width': 8, 'stroke-linejoin': 'round' }),
+    svg('polygon', { points: hexPoints(22, 36, 7), style: 'fill:var(--ink)' }),
     svg('polygon', { points: hexPoints(38, 28, 7), fill: '#8cc0cc' }),
     svg('polygon', { points: hexPoints(40, 44, 7), fill: '#f4b03a' }),
   ]));
@@ -74,8 +75,16 @@ function tabbar(active) {
 }
 
 async function boot() {
+  applyTheme();
   await A.init();
   nav.tab(flags().onboarded ? 'home' : 'onboarding');
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+  if ('serviceWorker' in navigator) {
+    const hadController = !!navigator.serviceWorker.controller;
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+    // A new version took over: reload once so it shows up, but never in the middle of a session.
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (hadController && !A.isSessionActive()) location.reload();
+    });
+  }
 }
 boot();

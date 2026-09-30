@@ -161,10 +161,11 @@ export function guidedSession(ctx) {
     clearTimers();
     st.phase = 'retention';
     const target = holdTarget(st.round);
+    const isLast = st.round >= s.rounds;   // warm-up rounds end at their target; the last one is open-ended
     const t0 = Date.now();
     st.holdStart = t0;
     title.textContent = 'Let go and hold';
-    hint.textContent = 'Tap twice to go into recovery breath.';
+    hint.textContent = isLast ? 'Tap twice to go into recovery breath.' : 'Holds until your target. Tap twice to breathe in early.';
     orb.setPalette('ice'); orb.setScale(0.8, 1400);
     orb.setText('00:00', 'target ' + fmtShort(target), true);
     A.musicMode('hold', 2.5);
@@ -185,13 +186,27 @@ export function guidedSession(ctx) {
           if (Math.abs(e - minute * 60) > 6) say(id, { priority: 'low' });
         }
       });
-      if (!hitTarget && e >= target) { hitTarget = true; A.gong(); say('h-target'); }
+      if (!hitTarget && e >= target) {
+        hitTarget = true;
+        if (isLast) { A.gong(); say('h-target'); } else endHold();
+      }
     }, 250);
   }
 
-  function enterRecovery() {
+  // Ends a hold. Warm-up rounds go silent for 2 seconds first; the last round moves straight on.
+  function endHold() {
     clearTimers();
     st.holds.push((Date.now() - st.holdStart) / 1000);
+    if (st.round >= s.rounds) return startRecovery();
+    st.phase = 'pause';
+    A.stopVoice(); A.musicStop(0.3);
+    title.textContent = 'Get ready';
+    hint.textContent = '';
+    orb.setPalette('ice'); orb.setScale(0.8, 600); orb.setText('', '');
+    later(startRecovery, 2000);
+  }
+
+  function startRecovery() {
     st.phase = 'recovery';
     let left = s.recoverySec;
     title.textContent = 'Recovery breath';
@@ -230,7 +245,7 @@ export function guidedSession(ctx) {
   // double-tap anywhere in the body advances the phase
   onDoubleTap(body, () => {
     if (st.phase === 'breathing') { clearTimers(); A.stopVoice(); enterRetention(); }
-    else if (st.phase === 'retention') { A.stopVoice(); enterRecovery(); }
+    else if (st.phase === 'retention') { A.stopVoice(); endHold(); }
   });
 
   lead();

@@ -13,6 +13,8 @@ export function voiceStudio(ctx) {
   ];
   const wrap = el('main', 'page');
   const progress = el('p', 'lede small', '');
+  const note = el('p', 'muted', '');
+  note.style.color = 'var(--danger)';
   const total = groups.reduce((n, g) => n + g[1].length, 0);
   let active = null;
 
@@ -21,7 +23,7 @@ export function voiceStudio(ctx) {
     progress.textContent = n + ' of ' + total + ' lines recorded. Lines you skip use the Mac voice.';
   };
 
-  wrap.append(el('p', 'lede', 'Read each line in the tone shown. Tap the mic, speak, tap again to stop. Find a quiet room and hold the phone about a hand’s width away.'), progress);
+  wrap.append(el('p', 'lede', 'Read each line in the tone shown. Tap the mic, speak, tap again to stop. Find a quiet room and hold the phone about a hand’s width away.'), progress, note);
 
   const pack = card(el('h3', null, 'Move recordings between devices'));
   pack.append(el('p', 'lede small', 'Record on any device, export a voice pack, then import it on your other devices (AirDrop or Files works).'));
@@ -69,7 +71,7 @@ export function voiceStudio(ctx) {
           const handle = await startRecording();
           active = { id: cue.id, handle };
           rec.classList.add('recording');
-        } catch (e) { text.textContent = 'Microphone not available. Allow access in Settings › Safari › Microphone.'; }
+        } catch (e) { note.textContent = 'Could not record: ' + (e.name && e.name !== 'Error' ? e.name + ': ' : '') + e.message + ' (' + (matchMedia('(display-mode: standalone)').matches ? 'home-screen app' : 'browser tab') + ')'; }
       };
       play.onclick = () => A.previewClip(cue.id);
       del.onclick = async () => { await deleteClip(cue.id); await refreshKnown(); sync(); updateProgress(); };

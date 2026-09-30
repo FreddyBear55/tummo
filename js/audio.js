@@ -326,4 +326,5 @@ document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible' && wake === null && sessionActive) keepAwake();
 });
 let sessionActive = false;
+export const isSessionActive = () => sessionActive;
 export function setSessionActive(on) { sessionActive = on; if (on) keepAwake(); else allowSleep(); }

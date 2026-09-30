@@ -2,6 +2,7 @@ import * as A from '../audio.js';
 import { el, toggle, stepper, segmented, slider, confirmDialog } from '../ui.js';
 import { settings, setSetting, flags, setFlag, exportJSON, importJSON, clearSessions, fmtShort } from '../store.js';
 import { card } from './common.js';
+import { applyTheme } from '../theme.js';
 import { listClipIds } from '../recordings.js';
 
 function shareOrDownload(filename, text) {
@@ -23,6 +24,11 @@ export function settingsScreen(ctx) {
   nameIn.placeholder = 'Your first name'; nameIn.value = flags().name || '';
   nameIn.onchange = () => setFlag('name', nameIn.value.trim());
   wrap.append(card(el('h3', null, 'Profile'), nameIn));
+
+  const look = card(el('h3', null, 'Appearance'));
+  look.append(segmented([['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']], s.theme || 'auto', (k) => { setSetting('theme', k); applyTheme(); }));
+  look.append(el('small', 'muted', 'Auto follows your phone’s light or dark setting.'));
+  wrap.append(look);
 
   const voice = card(el('h3', null, 'Voice'));
   voice.append(segmented([['mac', 'Mac voice'], ['off', 'Off']], s.voiceSet === 'off' ? 'off' : 'mac', (k) => { setSetting('voiceSet', k); if (k === 'off') A.stopVoice(); }));

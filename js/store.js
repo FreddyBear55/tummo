@@ -18,6 +18,8 @@ export const DEFAULTS = {
   coldMax: 180,
   coldPrep: 10,
   coldTempF: 50,
+  // look
+  theme: 'auto',            // auto | light | dark
   // audio
   voiceSet: 'mac',           // mac | off  (your own recordings override individual clips)
   guideBreathing: true,

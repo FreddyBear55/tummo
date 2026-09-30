@@ -32,12 +32,19 @@ export function hexPoints(cx, cy, r) {
   }).join(' ');
 }
 
+import { isDark } from './theme.js';
+
 const PALETTES = {
   ember: ['#e8722c', '#f08a34', '#f5a94a', '#f9cd82', '#fff4dc'],
   ice:   ['#b9dde5', '#cfe8ee', '#e0f1f5', '#ecf7fa', '#f5fbfc'],
   cold:  ['#5aa9c8', '#79bcd6', '#9fd0e3', '#c4e3ee', '#e6f4f9'],
   mind:  ['#d99a1f', '#e8b040', '#f1c56a', '#f7dc9c', '#fdf2d6'],
   teal:  ['#1b5566', '#2a6b7d', '#4a8a9b', '#8cb8c4', '#d3e6ea'],
+};
+// ice and cold are pale, so they get deeper versions in dark mode (ember and mind glow fine as they are)
+const DARK_PALETTES = {
+  ice:  ['#1a4553', '#205363', '#276374', '#2f7385', '#398496'],
+  cold: ['#1f5f7a', '#2a7392', '#3486a8', '#3f99bd', '#4aaed2'],
 };
 
 // The big breathing hexagon: layered rings that scale together, with text on top.
@@ -61,7 +68,7 @@ export function hexOrb({ palette = 'ember', size = 260 } = {}) {
   const api = {
     root,
     setPalette(name) {
-      const cols = PALETTES[name] || PALETTES.ember;
+      const cols = (isDark() && DARK_PALETTES[name]) || PALETTES[name] || PALETTES.ember;
       layers.forEach((p, i) => { p.setAttribute('fill', cols[i]); p.setAttribute('stroke', cols[i]); });
       root.dataset.palette = name;
     },

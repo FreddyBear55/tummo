@@ -95,7 +95,9 @@ export async function importPack(text) {
 }
 
 export async function startRecording() {
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: true } });
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw new Error('This page has no microphone access (it must be opened from the https address).');
+  if (!window.MediaRecorder) throw new Error('This browser cannot record audio (no MediaRecorder).');
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
   const mime = bestMime();
   const rec = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
   const chunks = [];
