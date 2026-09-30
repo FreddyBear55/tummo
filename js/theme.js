@@ -1,4 +1,5 @@
-// Light / dark / follow-the-phone. Stored in settings.theme ('auto' | 'light' | 'dark').
+// Day / Night / follow-the-phone. Stored in settings.theme ('auto' | 'light' | 'dark').
+// Night = pure black with red accents (keeps night vision).
 import { settings } from './store.js';
 
 const mq = window.matchMedia('(prefers-color-scheme: dark)');
@@ -9,11 +10,9 @@ export function isDark() {
 }
 
 export function applyTheme() {
-  const t = settings().theme;
-  const root = document.documentElement;
-  if (t === 'light' || t === 'dark') root.dataset.theme = t; else delete root.dataset.theme;
+  document.documentElement.dataset.mode = isDark() ? 'night' : 'day';
   const meta = document.querySelector('meta[name=theme-color]');
-  if (meta) meta.content = isDark() ? '#061a21' : '#0b3442';
+  if (meta) meta.content = isDark() ? '#000000' : '#0b3442';
 }
 
 mq.addEventListener('change', applyTheme);

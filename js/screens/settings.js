@@ -26,8 +26,8 @@ export function settingsScreen(ctx) {
   wrap.append(card(el('h3', null, 'Profile'), nameIn));
 
   const look = card(el('h3', null, 'Appearance'));
-  look.append(segmented([['auto', 'Auto'], ['light', 'Light'], ['dark', 'Dark']], s.theme || 'auto', (k) => { setSetting('theme', k); applyTheme(); }));
-  look.append(el('small', 'muted', 'Auto follows your phone’s light or dark setting.'));
+  look.append(segmented([['auto', 'Auto'], ['light', 'Day'], ['dark', 'Night']], s.theme || 'auto', (k) => { setSetting('theme', k); applyTheme(); }));
+  look.append(el('small', 'muted', 'Night is pure black with red text, to protect your night vision. Auto follows your phone’s light or dark setting. Turn your screen brightness down too.'));
   wrap.append(look);
 
   const voice = card(el('h3', null, 'Voice'));
@@ -38,6 +38,26 @@ export function settingsScreen(ctx) {
   listClipIds().then((ids) => { count.textContent = ids.length ? ids.length + ' of your recordings are in use.' : 'Your recordings replace the Mac voice line by line.'; }).catch(() => {});
   voice.append(studio, count);
   wrap.append(voice);
+
+  const styles = A.getBreathStyles();
+  if (styles.length) {
+    const bs = card(el('h3', null, 'Breathing sound'));
+    const cur = () => settings().breathStyle || 'soft';
+    const rows = styles.map((st) => {
+      const row = el('div', 'style-row' + (st.id === cur() ? ' on' : ''));
+      row.setAttribute('role', 'button');
+      const txt = el('div');
+      txt.append(el('strong', null, st.title), el('small', null, st.desc));
+      const play = el('button', 'style-play', 'Hear it');
+      play.type = 'button';
+      play.onclick = (e) => { e.stopPropagation(); A.previewBreath(st.id); };
+      row.append(txt, play);
+      row.onclick = () => { setSetting('breathStyle', st.id); rows.forEach((r, i) => r.classList.toggle('on', styles[i].id === st.id)); A.previewBreath(st.id); };
+      return row;
+    });
+    bs.append(...rows);
+    wrap.append(bs);
+  }
 
   const sound = card(el('h3', null, 'Sound'));
   sound.append(

@@ -41,11 +41,9 @@ const PALETTES = {
   mind:  ['#d99a1f', '#e8b040', '#f1c56a', '#f7dc9c', '#fdf2d6'],
   teal:  ['#1b5566', '#2a6b7d', '#4a8a9b', '#8cb8c4', '#d3e6ea'],
 };
-// ice and cold are pale, so they get deeper versions in dark mode (ember and mind glow fine as they are)
-const DARK_PALETTES = {
-  ice:  ['#1a4553', '#205363', '#276374', '#2f7385', '#398496'],
-  cold: ['#1f5f7a', '#2a7392', '#3486a8', '#3f99bd', '#4aaed2'],
-};
+// Night mode: every palette becomes a red ramp, brightest at the rim and darkest in the centre so the text stays readable.
+const NIGHT = ['#c22a1f', '#a12018', '#82180f', '#5f100b', '#3a0906'];
+const DARK_PALETTES = { ember: NIGHT, ice: NIGHT, cold: NIGHT, mind: NIGHT, teal: NIGHT };
 
 // The big breathing hexagon: layered rings that scale together, with text on top.
 export function hexOrb({ palette = 'ember', size = 260 } = {}) {

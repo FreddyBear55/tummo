@@ -1,16 +1,67 @@
 {
- "in": [
-  "in1.m4a",
-  "in2.m4a",
-  "in3.m4a",
-  "in4.m4a",
-  "in5.m4a"
- ],
- "out": [
-  "out1.m4a",
-  "out2.m4a",
-  "out3.m4a",
-  "out4.m4a",
-  "out5.m4a"
+ "styles": [
+  {
+   "id": "natural",
+   "title": "Natural",
+   "desc": "The recording as it is. Nose breath with a little air whistle.",
+   "in": [
+    "natural/in1.m4a",
+    "natural/in2.m4a",
+    "natural/in3.m4a",
+    "natural/in4.m4a",
+    "natural/in5.m4a"
+   ],
+   "out": [
+    "natural/out1.m4a",
+    "natural/out2.m4a",
+    "natural/out3.m4a",
+    "natural/out4.m4a",
+    "natural/out5.m4a"
+   ]
+  },
+  {
+   "id": "soft",
+   "title": "Soft",
+   "desc": "Same breath with the whistle filtered out.",
+   "in": [
+    "soft/in1.m4a",
+    "soft/in2.m4a",
+    "soft/in3.m4a",
+    "soft/in4.m4a",
+    "soft/in5.m4a"
+   ],
+   "out": [
+    "soft/out1.m4a",
+    "soft/out2.m4a",
+    "soft/out3.m4a",
+    "soft/out4.m4a",
+    "soft/out5.m4a"
+   ]
+  },
+  {
+   "id": "deep",
+   "title": "Deep",
+   "desc": "Slower and lower, a bigger, warmer breath.",
+   "in": [
+    "deep/in1.m4a",
+    "deep/in2.m4a",
+    "deep/in3.m4a",
+    "deep/in4.m4a",
+    "deep/in5.m4a"
+   ],
+   "out": [
+    "deep/out1.m4a",
+    "deep/out2.m4a",
+    "deep/out3.m4a",
+    "deep/out4.m4a",
+    "deep/out5.m4a"
+   ]
+  },
+  {
+   "id": "ocean",
+   "title": "Ocean",
+   "desc": "Smooth synthesized wind, no whistle.",
+   "synth": true
+  }
  ]
 }

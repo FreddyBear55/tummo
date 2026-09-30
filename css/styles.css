@@ -8,6 +8,10 @@
   --mist: #eef6f8;
   --paper: #ffffff;
   --btn: #0b3442;
+  --onbtn: #ffffff;
+  --ontop: #ffffff;
+  --hexb: #8cc0cc;
+  --hexc: #f4b03a;
   --tabbg: rgba(255, 255, 255, .96);
   --shade: rgba(15, 59, 74, .09);
   --line: #e0eef1;
@@ -21,22 +25,6 @@
   --safe-t: env(safe-area-inset-top, 0px);
   font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, -apple-system, sans-serif;
 }
-:root[data-theme=dark] {
-  --ink: #e6f1f4; --ink-2: #a9c3cb; --muted: #7f9aa3;
-  --deep: #061a21; --teal: #2f8aa5; --sky: #35667a; --mist: #15262d;
-  --paper: #0d1a20; --line: #223640; --btn: #2a7f9c; --tabbg: rgba(13, 26, 32, .96);
-  --shade: rgba(0, 0, 0, .35); --danger: #e0685f;
-  color-scheme: dark;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) {
-  --ink: #e6f1f4; --ink-2: #a9c3cb; --muted: #7f9aa3;
-  --deep: #061a21; --teal: #2f8aa5; --sky: #35667a; --mist: #15262d;
-  --paper: #0d1a20; --line: #223640; --btn: #2a7f9c; --tabbg: rgba(13, 26, 32, .96);
-  --shade: rgba(0, 0, 0, .35); --danger: #e0685f;
-  color-scheme: dark;
-  }
-}
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 html, body { margin: 0; height: 100%; background: var(--paper); color: var(--ink); overscroll-behavior: none; }
 body { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
@@ -49,13 +37,13 @@ h1, h2, h3, p { margin: 0; }
 /* ---------- top bar ---------- */
 .topbar {
   display: grid; grid-template-columns: 56px 1fr 56px; align-items: center;
-  background: var(--deep); color: #fff;
+  background: var(--deep); color: var(--ontop);
   padding: calc(var(--safe-t) + 10px) 12px 12px; position: sticky; top: 0; z-index: 5;
 }
 .topbar h1 { font-size: 19px; font-weight: 700; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.bar-btn { width: 40px; height: 40px; display: grid; place-items: center; color: #fff; }
+.bar-btn { width: 40px; height: 40px; display: grid; place-items: center; color: var(--ontop); }
 .bar-btn .ico { width: 24px; height: 24px; }
-.bar-pill { justify-self: end; background: #fff; color: var(--deep); font-weight: 700; font-size: 15px; padding: 7px 16px; border-radius: 12px; }
+.bar-pill { justify-self: end; background: var(--pillbg, #fff); color: var(--pilltxt, var(--deep)); font-weight: 700; font-size: 15px; padding: 7px 16px; border-radius: 12px; }
 
 /* ---------- page layout ---------- */
 .page { padding: 22px 20px calc(var(--tab-h) + var(--safe-b) + 24px); display: flex; flex-direction: column; gap: 16px; flex: 1; }
@@ -78,7 +66,7 @@ h1, h2, h3, p { margin: 0; }
 
 /* ---------- buttons ---------- */
 .btn { display: block; width: 100%; padding: 17px; border-radius: 18px; font-weight: 700; font-size: 18px; text-align: center; }
-.btn.primary { background: var(--btn); color: #fff; }
+.btn.primary { background: var(--btn); color: var(--onbtn); }
 .btn.primary.cold { background: #1f6f8f; }
 .btn.slim { padding: 13px; font-size: 16px; margin-top: 6px; }
 .btn.outline { border: 2px solid var(--line); color: var(--ink); background: var(--paper); }
@@ -153,7 +141,7 @@ input[type=range] { width: 100%; accent-color: var(--deep); }
 .step-val { min-width: 52px; text-align: center; font-size: 22px; font-weight: 800; }
 .segmented { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; background: var(--mist); border-radius: 18px; padding: 6px; gap: 4px; }
 .seg { padding: 15px 4px; border-radius: 13px; font-weight: 700; font-size: 17px; color: var(--ink); }
-.seg.on { background: var(--btn); color: #fff; }
+.seg.on { background: var(--btn); color: var(--onbtn); }
 .text-input { width: 100%; padding: 15px 16px; border: 2px solid var(--line); border-radius: 16px; font: inherit; font-size: 17px; color: var(--ink); background: var(--paper); -webkit-user-select: text; user-select: text; }
 
 /* ---------- breathing orb ---------- */
@@ -183,7 +171,7 @@ input[type=range] { width: 100%; accent-color: var(--deep); }
 .mind-line { font-size: 22px; line-height: 1.4; font-weight: 700; max-width: 320px; color: var(--ink); margin-top: 20px; min-height: 90px; }
 .mini-toggles { display: flex; gap: 10px; margin-top: 18px; }
 .pill { padding: 9px 20px; border-radius: 18px; background: var(--mist); color: var(--muted); font-weight: 700; font-size: 15px; }
-.pill.on { background: var(--btn); color: #fff; }
+.pill.on { background: var(--btn); color: var(--onbtn); }
 .result-note { min-height: 26px; font-size: 18px; font-weight: 800; color: var(--ember); }
 .mind-scope .topbar, .cold-scope .topbar { background: var(--deep); }
 
@@ -198,7 +186,7 @@ input[type=range] { width: 100%; accent-color: var(--deep); }
 .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; }
 .cal-dow { font-size: 12px; color: var(--muted); font-weight: 700; }
 .cal-day { aspect-ratio: 1; display: grid; place-items: center; font-size: 14px; border-radius: 50%; font-weight: 600; }
-.cal-day.on { background: var(--btn); color: #fff; }
+.cal-day.on { background: var(--btn); color: var(--onbtn); }
 .cal-day.today { outline: 2px solid var(--amber); }
 .chart { width: 100%; height: auto; }
 .hist-row { display: grid; grid-template-columns: 14px 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--line); }
@@ -244,18 +232,53 @@ input[type=range] { width: 100%; accent-color: var(--deep); }
 /* status bar: the app draws under it, so give it a dark band on every screen */
 body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: var(--safe-t); background: var(--deep); z-index: 30; }
 
-/* dark theme extras */
-:root[data-theme=dark] .banner { background: linear-gradient(135deg, #17323b, #1f4653); }
-:root[data-theme=dark] .hex-tile.frost polygon { fill: #3b7f92; stroke: #3b7f92; }
-:root[data-theme=dark] .hex-tile.frost .hex-inner { color: #eaf6f9; }
-:root[data-theme=dark] .safety-list .ic { background: #3a1f1f; }
-:root[data-theme=dark] .safety-list .ic.note { background: #3a2f14; }
-:root[data-theme=dark] .tab-home { filter: none; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme=light]) .banner { background: linear-gradient(135deg, #17323b, #1f4653); }
-  :root:not([data-theme=light]) .hex-tile.frost polygon { fill: #3b7f92; stroke: #3b7f92; }
-  :root:not([data-theme=light]) .hex-tile.frost .hex-inner { color: #eaf6f9; }
-  :root:not([data-theme=light]) .safety-list .ic { background: #3a1f1f; }
-  :root:not([data-theme=light]) .safety-list .ic.note { background: #3a2f14; }
-  :root:not([data-theme=light]) .tab-home { filter: none; }
+
+/* status bar: the app draws under it, so give it a band on every screen */
+body::before { content: ""; position: fixed; top: 0; left: 0; right: 0; height: var(--safe-t); background: var(--deep); z-index: 30; }
+::placeholder { color: var(--muted); }
+
+/* ------------------------------------------------------------------
+   NIGHT mode: true black, red only, to keep your eyes dark-adapted.
+   (Set by theme.js as data-mode="night" on <html>.)
+------------------------------------------------------------------ */
+:root[data-mode=night] {
+  --ink: #ff5347; --ink-2: #d63a30; --muted: #a02c24;
+  --deep: #000; --teal: #b3261c; --sky: #7a1a14; --mist: #170504;
+  --paper: #000; --line: #3a0f0b; --btn: #7d1610; --tabbg: rgba(0, 0, 0, .97);
+  --shade: rgba(0, 0, 0, .6); --danger: #ff5347; --amber: #ff5347; --ember: #ff5347; --cold: #c02a1f;
+  --onbtn: #ff9186; --ontop: #ff5347; --pillbg: #7d1610; --pilltxt: #ff9186;
+  --hexb: #b3261c; --hexc: #ff5347;
+  color-scheme: dark;
 }
+:root[data-mode=night] .banner { background: linear-gradient(135deg, #1c0705, #2d0a07); }
+:root[data-mode=night] .banner.light { background: var(--mist); }
+:root[data-mode=night] .hex-tile.deep polygon { fill: #5c120d; stroke: #5c120d; }
+:root[data-mode=night] .hex-tile.deep .hex-inner { color: #ff7366; }
+:root[data-mode=night] .hex-tile.frost polygon { fill: #3f0d09; stroke: #3f0d09; }
+:root[data-mode=night] .hex-tile.frost .hex-inner { color: #ff7366; }
+:root[data-mode=night] .hex-tile.gold polygon { fill: #8a1c14; stroke: #8a1c14; }
+:root[data-mode=night] .hex-tile.gold .hex-inner { color: #ffa196; }
+:root[data-mode=night] .hex-tile { filter: none; }
+:root[data-mode=night] .tool-badge.ember,
+:root[data-mode=night] .tool-badge.ice,
+:root[data-mode=night] .tool-badge.gold { background: linear-gradient(#6d130d, #430b07); color: #ff8f84; }
+:root[data-mode=night] .switch { background: #2a0b09; }
+:root[data-mode=night] .switch::after { background: #ff8f84; }
+:root[data-mode=night] .orb-big,
+:root[data-mode=night] .orb .orb-big,
+:root[data-mode=night] .orb-big.word { color: #ff6a5c; }
+:root[data-mode=night] .orb-shape { filter: none; }
+:root[data-mode=night] .safety-list .ic,
+:root[data-mode=night] .safety-list .ic.note { background: #2a0b09; color: var(--danger); }
+:root[data-mode=night] .voice-dot.on { background: var(--ink); }
+:root[data-mode=night] .icon-btn.recording { background: var(--danger); color: #000; }
+:root[data-mode=night] input[type=range] { accent-color: var(--teal); }
+:root[data-mode=night] .tab-home { filter: none; }
+:root[data-mode=night] .tool-card, :root[data-mode=night] .mind-card, :root[data-mode=night] .card { border: 1px solid var(--line); }
+
+/* breathing-sound picker in Settings */
+.style-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 10px 12px; border: 2px solid var(--line); border-radius: 16px; text-align: left; width: 100%; }
+.style-row.on { border-color: var(--btn); background: var(--mist); }
+.style-row strong { display: block; font-size: 17px; }
+.style-row small { color: var(--muted); font-size: 13px; }
+.style-play { padding: 9px 16px; border-radius: 14px; background: var(--btn); color: var(--onbtn); font-weight: 700; }

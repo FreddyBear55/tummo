@@ -61,6 +61,7 @@ export function voiceStudio(ctx) {
       rec.onclick = async () => {
         A.unlock();
         if (active && active.id === cue.id) {
+          A.exitRecordMode();
           const blob = await toWav(await active.handle.stop());
           await saveClip(cue.id, blob); await refreshKnown();
           rec.classList.remove('recording'); active = null; sync(); updateProgress();
@@ -68,10 +69,11 @@ export function voiceStudio(ctx) {
         }
         if (active) return;
         try {
+          A.enterRecordMode();
           const handle = await startRecording();
           active = { id: cue.id, handle };
           rec.classList.add('recording');
-        } catch (e) { note.textContent = 'Could not record: ' + (e.name && e.name !== 'Error' ? e.name + ': ' : '') + e.message + ' (' + (matchMedia('(display-mode: standalone)').matches ? 'home-screen app' : 'browser tab') + ')'; }
+        } catch (e) { A.exitRecordMode(); note.textContent = 'Could not record: ' + (e.name && e.name !== 'Error' ? e.name + ': ' : '') + e.message + ' (' + (matchMedia('(display-mode: standalone)').matches ? 'home-screen app' : 'browser tab') + ')'; }
       };
       play.onclick = () => A.previewClip(cue.id);
       del.onclick = async () => { await deleteClip(cue.id); await refreshKnown(); sync(); updateProgress(); };
@@ -84,6 +86,6 @@ export function voiceStudio(ctx) {
     wrap.append(c);
   });
   updateProgress();
-  ctx.onLeave(() => { if (active) active.handle.stop(); });
+  ctx.onLeave(() => { if (active) active.handle.stop(); A.exitRecordMode(); });
   return add(el('div'), header(ctx, 'Record my voice'), wrap);
 }

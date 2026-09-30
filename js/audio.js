@@ -12,7 +12,7 @@ let ctx = null;
 const bus = {};
 const buffers = new Map();     // url -> AudioBuffer | null
 let script = { cues: [], mind: [] };
-let manifests = { breath: { in: [], out: [] }, music: { breath: [], hold: [] } };
+let manifests = { breath: { styles: [] }, music: { breath: [], hold: [] } };
 
 const clamp01 = (v) => Math.max(0, Math.min(1, v));
 const vol = (key) => clamp01((settings()[key] ?? 0) / 100);
@@ -32,6 +32,7 @@ export async function init() {
 
 export const getScript = () => script;
 export const getTracks = (mode) => manifests.music[mode] || [];
+export const getBreathStyles = () => manifests.breath.styles || [];
 export const cueText = (id) => {
   const c = script.cues.find((x) => x.id === id);
   if (c) return c.text;
@@ -51,19 +52,31 @@ export function unlock() {
   }
   if (ctx.state !== 'running') ctx.resume();
   applyVolumes();
+  preloadVoice();
 }
 
 // On iPhone, Web Audio is muted by the side (ringer) switch unless the page is "playing media".
+let keepAlive = null;
 function keepAliveForSilentSwitch() {
   try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* older iOS */ }
   try {
-    const a = document.createElement('audio');
+    const a = keepAlive = document.createElement('audio');
     a.setAttribute('playsinline', '');
     a.loop = true;
     a.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
     a.volume = 0.01;
     a.play().catch(() => {});
   } catch (e) { /* not fatal */ }
+}
+
+// iPhone refuses to record while the page is set to "playback only". Switch for the recording screen.
+export function enterRecordMode() {
+  try { if (keepAlive) keepAlive.pause(); } catch (e) { /* fine */ }
+  try { if (navigator.audioSession) navigator.audioSession.type = 'play-and-record'; } catch (e) { /* older iOS */ }
+}
+export function exitRecordMode() {
+  try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* older iOS */ }
+  try { if (keepAlive) keepAlive.play().catch(() => {}); } catch (e) { /* fine */ }
 }
 
 export function applyVolumes() {
@@ -98,26 +111,41 @@ async function decodeBlob(blob) {
 
 let voiceNode = null;
 let voiceBusyUntil = 0;
+let voiceSeq = 0;          // every say() takes a number; if a newer one arrives while loading, the older one gives up
 
 export function stopVoice() {
+  voiceSeq++;
   if (voiceNode) { try { voiceNode.stop(); } catch (e) { /* already ended */ } voiceNode = null; }
   voiceBusyUntil = 0;
   if ('speechSynthesis' in window) speechSynthesis.cancel();
 }
 
-// priority 'high' interrupts whatever is playing. 'low' is skipped if the voice is still talking.
+async function voiceBuffer(id) {
+  if (hasRecording(id)) {
+    const blob = await getClip(id).catch(() => null);
+    const buf = blob ? await decodeBlob(blob) : null;
+    if (buf) return buf;
+  }
+  return loadBuffer('audio/voice/mac/' + id + '.m4a');
+}
+
+// Warm the cache so lines start instantly (a slow load is what made two lines overlap).
+export function preloadVoice() {
+  if (!ctx) return;
+  const ids = script.cues.map((c) => c.id);
+  script.mind.forEach((p) => p.steps.forEach((st) => ids.push(st.id)));
+  ids.forEach((id) => loadBuffer('audio/voice/mac/' + id + '.m4a'));
+}
+
+// priority 'high' interrupts whatever is playing. 'low' is skipped if the voice is busy or about to be.
 export async function say(id, { priority = 'high', guide = true, force = false } = {}) {
   const s = settings();
   if (!ctx || (!force && (s.voiceSet === 'off' || !guide))) return;
-  if (priority === 'low' && ctx.currentTime < voiceBusyUntil) return;
+  if (priority === 'low' && (voiceNode || ctx.currentTime < voiceBusyUntil)) return;
   stopVoice();
-
-  let buf = null;
-  if (hasRecording(id)) {
-    const blob = await getClip(id).catch(() => null);
-    if (blob) buf = await decodeBlob(blob);
-  }
-  if (!buf) buf = await loadBuffer('audio/voice/mac/' + id + '.m4a');
+  const mine = voiceSeq;
+  const buf = await voiceBuffer(id);
+  if (mine !== voiceSeq) return;                 // a newer line took over while this one loaded
 
   if (buf) {
     const src = ctx.createBufferSource();
@@ -148,15 +176,29 @@ export async function previewClip(id) {
 
 /* ---------- breath ---------- */
 
-export async function breath(kind, durSec) {
-  if (!ctx || !settings().breathSounds) return;
-  const list = (manifests.breath[kind] || []);
+function currentBreathStyle() {
+  const list = getBreathStyles();
+  return list.find((x) => x.id === settings().breathStyle) || list.find((x) => x.id === 'soft') || list[0] || { synth: true };
+}
+
+export async function breath(kind, durSec, styleOverride) {
+  if (!ctx || (!styleOverride && !settings().breathSounds)) return;
+  const style = styleOverride || currentBreathStyle();
+  const list = style.synth ? [] : (style[kind] || []);
   if (list.length) {
-    const url = 'audio/breath/' + list[Math.floor(Math.random() * list.length)];
-    const buf = await loadBuffer(url);
+    const buf = await loadBuffer('audio/breath/' + list[Math.floor(Math.random() * list.length)]);
     if (buf) return playSample(buf, durSec);
   }
-  synthBreath(kind, durSec);
+  synthBreath(kind, durSec, !!style.synth);
+}
+
+// Lets you hear a breath style from Settings: one breath in, then one out.
+export function previewBreath(styleId) {
+  unlock();
+  const style = getBreathStyles().find((x) => x.id === styleId);
+  if (!style) return;
+  breath('in', 2, style);
+  setTimeout(() => breath('out', 2, style), 2300);
 }
 
 function playSample(buf, durSec) {
@@ -188,8 +230,9 @@ function noise() {
   return noiseBuf;
 }
 
-function synthBreath(kind, dur) {
+function synthBreath(kind, dur, ocean = false) {
   const t = ctx.currentTime;
+  if (ocean) return oceanBreath(kind, dur, t);
   const src = ctx.createBufferSource();
   src.buffer = noise(); src.loop = true;
   const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.9;
@@ -206,6 +249,23 @@ function synthBreath(kind, dur) {
     g.gain.exponentialRampToValueAtTime(0.5, t + dur * 0.2);
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   }
+  src.connect(bp).connect(lp).connect(g).connect(bus.breath);
+  src.start(t, Math.random() * 2); src.stop(t + dur + 0.05);
+}
+
+// Smooth, warm wind: low band-pass sweep, gentle swell, nothing above ~1 kHz so there is no whistle.
+function oceanBreath(kind, dur, t) {
+  const src = ctx.createBufferSource();
+  src.buffer = noise(); src.loop = true;
+  const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.45;
+  const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1100;
+  const g = ctx.createGain();
+  const from = kind === 'in' ? 260 : 620, to = kind === 'in' ? 640 : 240;
+  bp.frequency.setValueAtTime(from, t);
+  bp.frequency.linearRampToValueAtTime(to, t + dur);
+  const n = 64, curve = new Float32Array(n), peak = kind === 'in' ? 0.72 : 0.3;
+  for (let i = 0; i < n; i++) { const x = i / (n - 1); const s = Math.sin(Math.PI * Math.pow(x, kind === 'in' ? 1.6 : 0.6)); curve[i] = 0.75 * s * s; }
+  g.gain.setValueCurveAtTime(curve, t, dur);
   src.connect(bp).connect(lp).connect(g).connect(bus.breath);
   src.start(t, Math.random() * 2); src.stop(t + dur + 0.05);
 }

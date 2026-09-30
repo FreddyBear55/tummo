@@ -66,8 +66,8 @@ function tabbar(active) {
   centre.append(svg('svg', { viewBox: '0 0 64 64' }, [
     svg('polygon', { points: hexPoints(32, 32, 26), style: 'fill:var(--paper);stroke:var(--paper)', 'stroke-width': 8, 'stroke-linejoin': 'round' }),
     svg('polygon', { points: hexPoints(22, 36, 7), style: 'fill:var(--ink)' }),
-    svg('polygon', { points: hexPoints(38, 28, 7), fill: '#8cc0cc' }),
-    svg('polygon', { points: hexPoints(40, 44, 7), fill: '#f4b03a' }),
+    svg('polygon', { points: hexPoints(38, 28, 7), style: 'fill:var(--hexb)' }),
+    svg('polygon', { points: hexPoints(40, 44, 7), style: 'fill:var(--hexc)' }),
   ]));
   centre.onclick = () => nav.tab('home');
   bar.append(mk('results', icons.chart, 'Results'), centre, mk('settings', icons.gear, 'Settings'));
