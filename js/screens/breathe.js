@@ -124,8 +124,9 @@ export function guidedSession(ctx) {
     hint.textContent = 'Tap twice to go into retention.';
     orb.setPalette('ember'); orb.setScale(0.7, 0);
     A.musicMode('breath', 2);
-    if (st.round > 1) say('round-' + Math.min(st.round, 8));
-    step(true, st.round > 1 ? 2200 : 0);
+    // Round one is announced here; later rounds are announced in the "Exhale. Round N." line before them.
+    if (st.round === 1) A.sayWhenFree('rd-1', 0.1, { guide: s.guideBreathing });
+    step(true, st.round === 1 ? 1800 : 0);
   }
 
   function step(isIn, delay = 0) {
@@ -172,6 +173,7 @@ export function guidedSession(ctx) {
     A.ping();
     A.sayWhenFree('h-start', 0.7, { guide: s.guideRetention });   // let "Last breath…" finish first
     let hitTarget = false, almost = false, lastMinute = 0;
+    const counted = new Set();
     const cues = [[20, 'h-relax'], [40, 'h-soft'], [90, 'h-urge']];
     const fired = new Set();
     every(() => {
@@ -189,27 +191,25 @@ export function guidedSession(ctx) {
       if (!almost && target > 25 && e >= target - 15) { almost = true; say('h-almost'); }
       if (!hitTarget && e >= target) {
         hitTarget = true;
-        if (isLast) { A.gong(); say('h-target'); } else endHold();
+        if (isLast) { A.gong(); say('h-target'); } else endHold(true);
+      } else if (!isLast && target > 8) {
+        // spoken countdown, one number per second: 5 4 3 2 1, then "Inhale" at the target
+        const rem = Math.ceil(target - e);
+        if (rem >= 1 && rem <= 5 && !counted.has(rem)) { counted.add(rem); say('n-' + rem); }
       }
-    }, 250);
+    }, 100);
   }
 
-  // Ends the long hold (target reached, or you double-tapped) and moves to the recovery breath.
-  // The music keeps playing the whole way through. Warm-up rounds get a 4-second quiet beat (no voice);
-  // the last round goes straight in.
-  function endHold() {
+  // Ends the long hold and moves straight to the recovery breath; the music keeps playing.
+  // `auto` = the target was reached (the countdown already spoke "Inhale"); otherwise you tapped early.
+  function endHold(auto = false) {
     clearTimers();
     st.holds.push((Date.now() - st.holdStart) / 1000);
-    A.stopVoice();
-    if (st.round >= s.rounds) return startRecovery();
-    st.phase = 'pause';
-    title.textContent = 'Get ready';
-    hint.textContent = '';
-    orb.setPalette('ice'); orb.setScale(0.8, 600); orb.setText('', '');
-    later(startRecovery, 4000);
+    if (!auto) A.stopVoice();
+    startRecovery(auto ? 'h-inhale' : 'r-in');
   }
 
-  function startRecovery() {
+  function startRecovery(cue = 'r-in') {
     st.phase = 'recovery';
     let left = s.recoverySec;
     title.textContent = 'Recovery breath';
@@ -218,11 +218,12 @@ export function guidedSession(ctx) {
     orb.setText(String(left), 'recovery');
     A.musicMode('hold', 1);          // same calm track through the hold and the recovery hold
     A.breath('in', 1.8);
-    say('r-in');
+    say(cue);
     every(() => {
       left--;
       orb.setText(String(Math.max(0, left)), 'recovery');
-      if (left > 0 && left <= 3) A.tick();
+      if (left >= 1 && left <= 5) say('n-' + left);                 // spoken 5 4 3 2 1
+      if (left > 0 && left <= 3 && settings().voiceSet === 'off') A.tick();
       if (left <= 0) { clearTimers(); nextRound(); }
     }, 1000);
   }
@@ -230,12 +231,11 @@ export function guidedSession(ctx) {
   // After the recovery hold: 4 seconds to breathe out before the next round (or the finish).
   function nextRound() {
     st.phase = 'exhale';
-    A.stopVoice();
     title.textContent = 'Breathe out';
     hint.textContent = st.round >= s.rounds ? 'Let the breath go.' : 'Let the breath go. The next round starts in a moment.';
     orb.setPalette('ice'); orb.setScale(0.7, 3000); orb.setText('', '');
     A.breath('out', 1.8);
-    say('r-out');
+    say(st.round >= s.rounds ? 'x-end' : 'x-' + (st.round + 1));   // "Exhale. Round two."
     later(() => {
       if (st.round >= s.rounds) return finish();
       st.round++;

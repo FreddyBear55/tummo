@@ -2,14 +2,7 @@
   "cues": [
     {"id": "begin", "tone": "energetic", "text": "Alright, let's do this. Get comfortable, and follow the rhythm."},
 
-    {"id": "round-1", "tone": "energetic", "text": "Round one. Here we go."},
-    {"id": "round-2", "tone": "energetic", "text": "Round two. Stay with it."},
-    {"id": "round-3", "tone": "energetic", "text": "Round three. You're getting stronger."},
-    {"id": "round-4", "tone": "energetic", "text": "Round four. Keep it flowing."},
-    {"id": "round-5", "tone": "energetic", "text": "Round five. Almost there."},
-    {"id": "round-6", "tone": "energetic", "text": "Round six. Let's finish strong."},
-    {"id": "round-7", "tone": "energetic", "text": "Round seven. Keep going."},
-    {"id": "round-8", "tone": "energetic", "text": "Round eight. One breath at a time."},
+    {"id": "rd-1", "tone": "energetic", "text": "Round one."},
 
     {"id": "b-power", "tone": "energetic", "text": "Deep breath in, all the way, and let it go."},
     {"id": "b-full", "tone": "energetic", "text": "Fill up the belly, then the chest, then let it fall."},
@@ -26,6 +19,13 @@
     {"id": "h-soft", "tone": "calm", "text": "Soft face. Soft shoulders. There is nothing to do."},
     {"id": "h-urge", "tone": "calm", "text": "When you feel a strong urge to breathe, take your time. Then tap twice to come back."},
     {"id": "h-almost", "tone": "calm", "text": "You are almost there."},
+    {"id": "h-inhale", "tone": "calm", "text": "Inhale."},
+    {"id": "n-5", "tone": "calm", "text": "Five."},
+    {"id": "n-4", "tone": "calm", "text": "Four."},
+    {"id": "n-3", "tone": "calm", "text": "Three."},
+    {"id": "n-2", "tone": "calm", "text": "Two."},
+    {"id": "n-1", "tone": "calm", "text": "One."},
+
     {"id": "h-min-1", "tone": "calm", "text": "One minute."},
     {"id": "h-min-2", "tone": "calm", "text": "Two minutes."},
     {"id": "h-min-3", "tone": "calm", "text": "Three minutes."},
@@ -34,7 +34,14 @@
     {"id": "h-target", "tone": "calm", "text": "You've reached your target. Stay as long as it feels good."},
 
     {"id": "r-in", "tone": "calm", "text": "Now take one deep breath in. Fill up completely, and hold."},
-    {"id": "r-out", "tone": "calm", "text": "And let it go."},
+    {"id": "x-end", "tone": "calm", "text": "Exhale."},
+    {"id": "x-2", "tone": "calm", "text": "Exhale. Round two."},
+    {"id": "x-3", "tone": "calm", "text": "Exhale. Round three."},
+    {"id": "x-4", "tone": "calm", "text": "Exhale. Round four."},
+    {"id": "x-5", "tone": "calm", "text": "Exhale. Round five."},
+    {"id": "x-6", "tone": "calm", "text": "Exhale. Round six."},
+    {"id": "x-7", "tone": "calm", "text": "Exhale. Round seven."},
+    {"id": "x-8", "tone": "calm", "text": "Exhale. Round eight."},
 
     {"id": "finish", "tone": "calm", "text": "Beautiful work. Take a moment, and notice how you feel."},
 
