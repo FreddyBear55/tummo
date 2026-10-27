@@ -201,18 +201,24 @@ export function previewBreath(styleId) {
   setTimeout(() => breath('out', 2, style), 2300);
 }
 
+// Plays one breath sample. The pitch stays close to the recording (a stretched breath sounds fake);
+// each breath varies slightly in speed and loudness so 40 in a row don't sound like a loop.
 function playSample(buf, durSec) {
   const src = ctx.createBufferSource();
   src.buffer = buf;
-  src.playbackRate.value = Math.max(0.6, Math.min(1.5, buf.duration / durSec));
+  const jitter = 1 + (Math.random() - 0.5) * 0.08;
+  const rate = Math.max(0.85, Math.min(1.15, buf.duration / durSec)) * jitter;
+  src.playbackRate.value = rate;
   const g = ctx.createGain();
-  const t = ctx.currentTime, d = buf.duration / src.playbackRate.value;
+  const t = ctx.currentTime;
+  const d = Math.min(buf.duration / rate, durSec * 1.05);      // never run on past the breath
+  const peak = 0.88 + Math.random() * 0.24;
   g.gain.setValueAtTime(0, t);
-  g.gain.linearRampToValueAtTime(1, t + Math.min(0.12, d * 0.15));
-  g.gain.setValueAtTime(1, t + d * 0.8);
+  g.gain.linearRampToValueAtTime(peak, t + Math.min(0.15, d * 0.2));
+  g.gain.setValueAtTime(peak, t + d * 0.7);
   g.gain.linearRampToValueAtTime(0, t + d);
   src.connect(g).connect(bus.breath);
-  src.start(t);
+  src.start(t); src.stop(t + d + 0.05);
 }
 
 let noiseBuf = null;
@@ -260,11 +266,12 @@ function oceanBreath(kind, dur, t) {
   const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.Q.value = 0.45;
   const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1100;
   const g = ctx.createGain();
-  const from = kind === 'in' ? 260 : 620, to = kind === 'in' ? 640 : 240;
+  const v = 0.9 + Math.random() * 0.2;
+  const from = (kind === 'in' ? 260 : 620) * v, to = (kind === 'in' ? 640 : 240) * v;
   bp.frequency.setValueAtTime(from, t);
   bp.frequency.linearRampToValueAtTime(to, t + dur);
   const n = 64, curve = new Float32Array(n), peak = kind === 'in' ? 0.72 : 0.3;
-  for (let i = 0; i < n; i++) { const x = i / (n - 1); const s = Math.sin(Math.PI * Math.pow(x, kind === 'in' ? 1.6 : 0.6)); curve[i] = 0.75 * s * s; }
+  for (let i = 0; i < n; i++) { const x = i / (n - 1); const s = Math.sin(Math.PI * Math.pow(x, kind === 'in' ? 1.6 : 0.6)); curve[i] = (0.65 + Math.random() * 0.0) * s * s * v; }
   g.gain.setValueCurveAtTime(curve, t, dur);
   src.connect(bp).connect(lp).connect(g).connect(bus.breath);
   src.start(t, Math.random() * 2); src.stop(t + dur + 0.05);

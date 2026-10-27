@@ -38,7 +38,7 @@ export const DEFAULTS = {
 
 export const PACES = {
   slow:     { label: 'Slow',     inSec: 3.0, outSec: 3.0 },
-  standard: { label: 'Standard', inSec: 2.0, outSec: 2.0 },
+  standard: { label: 'Standard', inSec: 1.74, outSec: 1.74 },   // 2.0s before; 15% faster on 2026-10-26
   fast:     { label: 'Fast',     inSec: 1.5, outSec: 1.5 },
 };
 

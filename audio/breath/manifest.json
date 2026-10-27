@@ -1,22 +1,25 @@
 {
  "styles": [
   {
-   "id": "natural",
-   "title": "Natural",
-   "desc": "The recording as it is. Nose breath with a little air whistle.",
+   "id": "mouth",
+   "title": "Mouth",
+   "desc": "Real recording: quiet breath in, open-mouth breath out.",
    "in": [
-    "natural/in1.m4a",
-    "natural/in2.m4a",
-    "natural/in3.m4a",
-    "natural/in4.m4a",
-    "natural/in5.m4a"
+    "mouth/in1.m4a"
    ],
    "out": [
-    "natural/out1.m4a",
-    "natural/out2.m4a",
-    "natural/out3.m4a",
-    "natural/out4.m4a",
-    "natural/out5.m4a"
+    "mouth/out1.m4a"
+   ]
+  },
+  {
+   "id": "nose",
+   "title": "Nose (new)",
+   "desc": "A different, gentler nose breath. No whistle.",
+   "in": [
+    "nose/in1.m4a"
+   ],
+   "out": [
+    "nose/out1.m4a"
    ]
   },
   {
@@ -36,25 +39,6 @@
     "soft/out3.m4a",
     "soft/out4.m4a",
     "soft/out5.m4a"
-   ]
-  },
-  {
-   "id": "deep",
-   "title": "Deep",
-   "desc": "Slower and lower, a bigger, warmer breath.",
-   "in": [
-    "deep/in1.m4a",
-    "deep/in2.m4a",
-    "deep/in3.m4a",
-    "deep/in4.m4a",
-    "deep/in5.m4a"
-   ],
-   "out": [
-    "deep/out1.m4a",
-    "deep/out2.m4a",
-    "deep/out3.m4a",
-    "deep/out4.m4a",
-    "deep/out5.m4a"
    ]
   },
   {
