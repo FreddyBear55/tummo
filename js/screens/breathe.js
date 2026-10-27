@@ -195,7 +195,7 @@ export function guidedSession(ctx) {
   }
 
   // Ends the long hold (target reached, or you double-tapped) and moves to the recovery breath.
-  // The music keeps playing the whole way through. Warm-up rounds get a 2-second quiet beat (no voice);
+  // The music keeps playing the whole way through. Warm-up rounds get a 4-second quiet beat (no voice);
   // the last round goes straight in.
   function endHold() {
     clearTimers();
@@ -206,7 +206,7 @@ export function guidedSession(ctx) {
     title.textContent = 'Get ready';
     hint.textContent = '';
     orb.setPalette('ice'); orb.setScale(0.8, 600); orb.setText('', '');
-    later(startRecovery, 2000);
+    later(startRecovery, 4000);
   }
 
   function startRecovery() {
