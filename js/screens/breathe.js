@@ -194,17 +194,19 @@ export function guidedSession(ctx) {
     }, 250);
   }
 
-  // Ends a hold (target reached, or you double-tapped). Silent for 4 seconds so there's time to breathe
-  // out, then the recovery breath starts. Same for every round, including the last.
+  // Ends the long hold (target reached, or you double-tapped) and moves to the recovery breath.
+  // The music keeps playing the whole way through. Warm-up rounds get a 2-second quiet beat (no voice);
+  // the last round goes straight in.
   function endHold() {
     clearTimers();
     st.holds.push((Date.now() - st.holdStart) / 1000);
+    A.stopVoice();
+    if (st.round >= s.rounds) return startRecovery();
     st.phase = 'pause';
-    A.stopVoice(); A.musicStop(0.3);
-    title.textContent = 'Breathe out';
-    hint.textContent = 'Let the breath go. Recovery starts in a moment.';
+    title.textContent = 'Get ready';
+    hint.textContent = '';
     orb.setPalette('ice'); orb.setScale(0.8, 600); orb.setText('', '');
-    later(startRecovery, 4000);
+    later(startRecovery, 2000);
   }
 
   function startRecovery() {
@@ -214,23 +216,31 @@ export function guidedSession(ctx) {
     hint.textContent = 'Breathe in deep and hold.';
     orb.setPalette('ice'); orb.setScale(1, 1600);
     orb.setText(String(left), 'recovery');
-    A.musicMode('breath', 2);
+    A.musicMode('hold', 1);          // same calm track through the hold and the recovery hold
     A.breath('in', 1.8);
     say('r-in');
     every(() => {
       left--;
       orb.setText(String(Math.max(0, left)), 'recovery');
       if (left > 0 && left <= 3) A.tick();
-      if (left === 3) say('r-out', { priority: 'low' });
       if (left <= 0) { clearTimers(); nextRound(); }
     }, 1000);
   }
 
+  // After the recovery hold: 4 seconds to breathe out before the next round (or the finish).
   function nextRound() {
+    st.phase = 'exhale';
+    A.stopVoice();
+    title.textContent = 'Breathe out';
+    hint.textContent = st.round >= s.rounds ? 'Let the breath go.' : 'Let the breath go. The next round starts in a moment.';
+    orb.setPalette('ice'); orb.setScale(0.7, 3000); orb.setText('', '');
     A.breath('out', 1.8);
-    if (st.round >= s.rounds) return finish();
-    st.round++;
-    startBreathing();
+    say('r-out');
+    later(() => {
+      if (st.round >= s.rounds) return finish();
+      st.round++;
+      startBreathing();
+    }, 4000);
   }
 
   function finish() {

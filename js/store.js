@@ -25,7 +25,7 @@ export const DEFAULTS = {
   guideBreathing: true,
   guideRetention: true,
   breathSounds: true,
-  breathStyle: 'soft',
+  breathStyle: 'mouth',
   musicBreath: true,
   musicHold: true,
   gong: true,
