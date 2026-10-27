@@ -170,8 +170,8 @@ export function guidedSession(ctx) {
     orb.setText('00:00', 'target ' + fmtShort(target), true);
     A.musicMode('hold', 2.5);
     A.ping();
-    say('h-start');
-    let hitTarget = false, lastMinute = 0;
+    A.sayWhenFree('h-start', 0.7, { guide: s.guideRetention });   // let "Last breath…" finish first
+    let hitTarget = false, almost = false, lastMinute = 0;
     const cues = [[20, 'h-relax'], [40, 'h-soft'], [90, 'h-urge']];
     const fired = new Set();
     every(() => {
@@ -186,6 +186,7 @@ export function guidedSession(ctx) {
           if (Math.abs(e - minute * 60) > 6) say(id, { priority: 'low' });
         }
       });
+      if (!almost && target > 25 && e >= target - 15) { almost = true; say('h-almost'); }
       if (!hitTarget && e >= target) {
         hitTarget = true;
         if (isLast) { A.gong(); say('h-target'); } else endHold();
@@ -193,17 +194,17 @@ export function guidedSession(ctx) {
     }, 250);
   }
 
-  // Ends a hold. Warm-up rounds go silent for 2 seconds first; the last round moves straight on.
+  // Ends a hold (target reached, or you double-tapped). Silent for 4 seconds so there's time to breathe
+  // out, then the recovery breath starts. Same for every round, including the last.
   function endHold() {
     clearTimers();
     st.holds.push((Date.now() - st.holdStart) / 1000);
-    if (st.round >= s.rounds) return startRecovery();
     st.phase = 'pause';
     A.stopVoice(); A.musicStop(0.3);
-    title.textContent = 'Get ready';
-    hint.textContent = '';
+    title.textContent = 'Breathe out';
+    hint.textContent = 'Let the breath go. Recovery starts in a moment.';
     orb.setPalette('ice'); orb.setScale(0.8, 600); orb.setText('', '');
-    later(startRecovery, 2000);
+    later(startRecovery, 4000);
   }
 
   function startRecovery() {

@@ -167,6 +167,19 @@ export async function say(id, { priority = 'high', guide = true, force = false }
   }
 }
 
+// Speaks a line once whatever is being said has finished, then waits `gap` seconds.
+// If anything else speaks (or the voice is stopped) in the meantime, this line is dropped.
+export function sayWhenFree(id, gap = 0.6, opts = {}) {
+  if (!ctx) return;
+  const mine = voiceSeq;
+  const check = () => {
+    if (mine !== voiceSeq) return;
+    if (voiceNode) { setTimeout(check, 100); return; }
+    setTimeout(() => { if (mine === voiceSeq) say(id, opts); }, gap * 1000);
+  };
+  check();
+}
+
 // Plays a single clip for the voice studio preview.
 export async function previewClip(id) {
   if (!ctx) unlock();

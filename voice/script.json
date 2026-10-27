@@ -25,6 +25,7 @@
     {"id": "h-relax", "tone": "calm", "text": "Stay relaxed. Let the body be still."},
     {"id": "h-soft", "tone": "calm", "text": "Soft face. Soft shoulders. There is nothing to do."},
     {"id": "h-urge", "tone": "calm", "text": "When you feel a strong urge to breathe, take your time. Then tap twice to come back."},
+    {"id": "h-almost", "tone": "calm", "text": "You are almost there."},
     {"id": "h-min-1", "tone": "calm", "text": "One minute."},
     {"id": "h-min-2", "tone": "calm", "text": "Two minutes."},
     {"id": "h-min-3", "tone": "calm", "text": "Three minutes."},
