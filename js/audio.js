@@ -172,12 +172,17 @@ export async function say(id, { priority = 'high', guide = true, force = false }
 export function sayWhenFree(id, gap = 0.6, opts = {}) {
   if (!ctx) return;
   const mine = voiceSeq;
+  const busy = () => voiceNode || ctx.currentTime < voiceBusyUntil;
   const check = () => {
     if (mine !== voiceSeq) return;
-    if (voiceNode) { setTimeout(check, 100); return; }
-    setTimeout(() => { if (mine === voiceSeq) say(id, opts); }, gap * 1000);
+    if (busy()) { setTimeout(check, 100); return; }
+    setTimeout(() => {
+      if (mine !== voiceSeq) return;
+      if (busy()) return check();                // something started during the gap
+      say(id, opts);
+    }, gap * 1000);
   };
-  check();
+  setTimeout(check, 60);                          // let a line that was just requested start first
 }
 
 // Plays a single clip for the voice studio preview.

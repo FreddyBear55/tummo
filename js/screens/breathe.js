@@ -163,7 +163,7 @@ export function guidedSession(ctx) {
     st.phase = 'retention';
     const target = holdTarget(st.round);
     const isLast = st.round >= s.rounds;   // warm-up rounds end at their target; the last one is open-ended
-    const t0 = Date.now();
+    const t0 = Date.now() + 2000;   // the timer starts 2 seconds in, leaving time for the exhale
     st.holdStart = t0;
     title.textContent = 'Let go and hold';
     hint.textContent = isLast ? 'Tap twice to go into recovery breath.' : 'Holds until your target. Tap twice to breathe in early.';
@@ -177,10 +177,10 @@ export function guidedSession(ctx) {
     const cues = [[20, 'h-relax'], [40, 'h-soft'], [90, 'h-urge']];
     const fired = new Set();
     every(() => {
-      const e = (Date.now() - t0) / 1000;
+      const e = Math.max(0, (Date.now() - t0) / 1000);
       orb.setText(fmtClock(e), 'target ' + fmtShort(target), true);
       const minute = Math.floor(e / 60);
-      if (minute > lastMinute && minute <= 5) { lastMinute = minute; say('h-min-' + minute); }
+      if (minute > lastMinute && minute <= 5) { lastMinute = minute; A.sayWhenFree('h-min-' + minute, 0.1, { guide: s.guideRetention }); }
       else if (minute > 5 && minute > lastMinute) lastMinute = minute;
       cues.forEach(([sec, id]) => {
         if (e >= sec && !fired.has(id)) {
@@ -188,7 +188,7 @@ export function guidedSession(ctx) {
           if (Math.abs(e - minute * 60) > 6) say(id, { priority: 'low' });
         }
       });
-      if (!almost && target > 25 && e >= target - 15) { almost = true; say('h-almost'); }
+      if (!almost && target > 25 && e >= target - 15) { almost = true; A.sayWhenFree('h-almost', 0.2, { guide: s.guideRetention }); }   // waits for any line still being spoken
       if (!hitTarget && e >= target) {
         hitTarget = true;
         if (isLast) { A.gong(); say('h-target'); } else endHold(true);
@@ -204,7 +204,7 @@ export function guidedSession(ctx) {
   // `auto` = the target was reached (the countdown already spoke "Inhale"); otherwise you tapped early.
   function endHold(auto = false) {
     clearTimers();
-    st.holds.push((Date.now() - st.holdStart) / 1000);
+    st.holds.push(Math.max(0, (Date.now() - st.holdStart) / 1000));
     if (!auto) A.stopVoice();
     startRecovery(auto ? 'h-inhale' : 'r-in');
   }
